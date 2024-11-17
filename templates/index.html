@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload an image to generate a color palette with the top 10 most used colors.">
+    <title>Top Colors Finder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, form, main {
+            margin: auto;
+            width: 70%;
+            font-family: Helvetica, Arial, sans-serif;
+            padding: 1.1rem 1.2rem;
+        }
+
+        header > h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        header > p {
+            color: gray;
+            font-size: 1.2rem;
+        }
+
+        form {
+            background-color: skyblue;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type='file'], input[type='radio'], input[type='submit'] {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        input[type='file'] {
+            padding: 0.3rem;
+        }
+
+        input:hover {
+            cursor: pointer;
+        }
+
+        input[type='submit'] {
+            padding: 0.5rem 0.8rem;
+            border: 2px solid #003333;
+            background-color: #003333;
+            color: white;
+            border-radius: 4px;
+        }
+
+        main {
+            padding: 1rem 0;
+        }
+
+        .pair {
+            width: 100%;
+            display: flex;
+            margin: 0.5rem 0;
+            align-items: center;
+        }
+
+        .pair > .color-box {
+            width: 50%;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 50px;
+            font-size: 0.9rem;
+        }
+
+        .pair > .color-box-value {
+            width: 50%;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 50px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header, form, main {
+                width: 90%;
+            }
+            .pair {
+                flex-direction: column;
+            }
+            .color-box, .color-box-value {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Image Colour Palette Generator</h1>
+        <p>
+            Upload an image and this site will tell you the top 10 most used colors along with their hex or RGB codes.
+            If two colors appear the same number of times, both will be shown.
+        </p>
+    </header>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <label for="file-upload">Upload an Image:</label>
+        <input id="file-upload" type="file" name="file" accept="image/*" required />
+        <br>
+        <label>Select a Colour Code:</label>
+        <input type="radio" name="colour_code" value="rgb" required>RGB
+        <input type="radio" name="colour_code" value="hex" required>Hex
+        <br>
+        <input type="submit" value="Generate Palette" />
+    </form>
+    <main>
+        {% if colors_list %}
+            {% for i in range(colors_list|length) %}
+                <div class="pair">
+                    {% if code == 'hex' %}
+                        <div class="color-box" style="background-color: #{{ colors_list[i] }};"></div>
+                        <div class="color-box-value"> {{ i+1 }}: #{{ colors_list[i] }}</div>
+                    {% else %}
+                        <div class="color-box" style="background-color: rgb{{ colors_list[i] }};"></div>
+                        <div class="color-box-value"> {{ i+1 }}: rgb{{ colors_list[i] }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No colors to display. Please upload an image to generate a palette.</p>
+        {% endif %}
+    </main>
+</body>
+</html>
